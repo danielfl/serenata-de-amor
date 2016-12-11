@@ -395,6 +395,61 @@ print(foursquare['price.tier'].notnull().sum(),
       foursquare.query('confirmed_match == True')['price.tier'].notnull().sum() / len(companies))
 
 
+# ### Clustering for find the best group for a new restaurant
+
+# In[43]:
+
+companies.shape
+
+
+# In[45]:
+
+cnpjs = dataset.sort_values('issue_date')     .loc[dataset['cnpj_cpf'].str.len() == 14,
+         ['cnpj_cpf', 'supplier']] \
+    .drop_duplicates('cnpj_cpf', keep='last')
+cnpjs.head()
+
+
+# In[46]:
+
+dataset.loc[dataset['cnpj_cpf'].str.len() == 14].groupby('cnpj')
+
+
+# In[47]:
+
+is_cnpj = (dataset['cnpj_cpf'].str.len() != 14) &     dataset['cnpj_cpf'].notnull() &     dataset['document_type'] != 2
+dataset.loc[is_cnpj]     .sort_values('total_net_value', ascending=False).iloc[1]
+
+
+# In[48]:
+
+dataset['cnpj_cpf'] = dataset['cnpj_cpf'].astype(np.str).replace('nan', None)
+
+
+# In[49]:
+
+cnpj_cpf_list = dataset[['cnpj_cpf']].drop_duplicates()
+cnpj_cpf_list['cnpj_cpf'] = cnpj_cpf_list['cnpj_cpf'].astype(np.str)     .replace('nan', None)
+
+
+# In[50]:
+
+from math import isnan
+from pycpfcnpj import cpfcnpj
+
+def validate_cnpj_cpf(cnpj_or_cpf):
+    (cnpj_or_cpf == None) | cpfcnpj.validate(cnpj_or_cpf)
+
+
+
+cnpj_cpf_list['valid_cnpj_cpf'] =     np.vectorize(cpfcnpj.validate)(cnpj_cpf_list['cnpj_cpf'])
+
+
+# In[51]:
+
+cnpj_cpf_list[~cnpj_cpf_list['valid_cnpj_cpf']]
+
+
 # In[ ]:
 
 
