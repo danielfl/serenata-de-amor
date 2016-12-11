@@ -11792,6 +11792,24 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">serenata_toolbox.datasets</span> <span class="k">import</span> <span class="n">fetch</span>
+
+<span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;2016-11-19-reimbursements.xz&#39;</span><span class="p">,</span> <span class="s1">&#39;../data&#39;</span><span class="p">)</span>
+<span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;2016-09-03-companies.xz&#39;</span><span class="p">,</span> <span class="s1">&#39;../data&#39;</span><span class="p">)</span>
+<span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;2016-11-29-yelp-companies.xz&#39;</span><span class="p">,</span> <span class="s1">&#39;../data&#39;</span><span class="p">)</span>
+<span class="n">fetch</span><span class="p">(</span><span class="s1">&#39;2016-12-02-foursquare-companies.xz&#39;</span><span class="p">,</span> <span class="s1">&#39;../data&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -11815,9 +11833,19 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>companies.xz</code> dataset has businesses placed outside Brazilian area. We intentionally disconsider them.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">is_in_brazil</span> <span class="o">=</span> <span class="s1">&#39;(-73.992222 &lt; longitude &lt; -34.7916667) &amp; (-33.742222 &lt; latitude &lt; 5.2722222)&#39;</span>
@@ -11840,7 +11868,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> \
@@ -11857,7 +11885,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -11871,7 +11899,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[5]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -11894,40 +11922,10 @@ Name: total_net_value, dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>46.06</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.99</span><span class="p">)</span>
-<span class="n">bottom_99</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -11942,7 +11940,7 @@ Name: total_net_value, dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>244.0</pre>
+<pre>46.06</pre>
 </div>
 
 </div>
@@ -11956,7 +11954,9 @@ Name: total_net_value, dtype: float64</pre>
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bottom_99</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">],</span>
+             <span class="n">bins</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+             <span class="n">kde</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -11971,7 +11971,190 @@ Name: total_net_value, dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(188854, 264)</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x111c27048&gt;</pre>
+</div>
+
+</div>
+
+<div class="output_area"><div class="prompt"></div>
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+e3TzzTfntddey0033ZTFixenra0tX/3qV3PttdeadYaMT37yk5kzZ07OOuusvPXWW5k7d24+9rGP
+Ze7cueZNMWSHAAAGD0lEQVScIcvPLQxFp512WubMmZOZM2emvb09CxcuTHt7e//lR1OmTMnhhx+e
+ww477D1/H33npUpvr4XtzbHHHpvly5fntNNO638nxt/7vd/70H5uaWveedMBAAAAACiwQ15eBwAA
+AMD2TXQCAAAAoJzoBAAAAEA50QkAAACAcqITAAAAAOVEJwAAAADKiU4AAAAAlBOdAIAhp6enJxdd
+dNH7rpkzZ07Wrl37vmvOPvvsLFu2rHJrufHGG7NixYrSYx544IGlxwMAqCA6AQBDziuvvJKf//zn
+77vm4YcfTtM0v6Ud/dojjzySVqtVesy2trbS4wEAVBCdAIAhZ/78+fnVr36Viy++OPfcc09OOeWU
+/PEf/3HmzJmT119/Pbfcckt+9atf5fzzz8+rr76aH/7wh5kxY0ZOPfXUTJ06NcuXLx/Q13n22Wcz
+ffr0/OVf/mVOOeWU/Omf/mlee+21JMnPfvaznH766fn0pz+dL3zhC3nllVfyve99L6tWrcrcuXPz
+i1/84j2P+corr+Soo47Kpk2bkiS/+MUvMm3atCTJX//1X2fGjBmZOnVqzjzzzLz00kub/dlFixZl
+0aJF/Y+PO+64PPfcc2m1Wrnuuuvy6U9/Oqeeemr+4R/+Yav/TgEAtpboBAAMOXPnzs3uu++eL3zh
+C/nbv/3b3HHHHfnBD36QUaNGZfHixTn//POz++6759Zbb83o0aNz55135uabb873vve9nHfeefn2
+t7894K/1+OOP59xzz829996b7u7u3HvvvVm3bl3+6q/+Kn/3d3+Xe+65J1OmTMkNN9yQU089NYce
+emjmz5+f/fff/z2Pt+uuu2b8+PF58MEHkyT//M//nGnTpuXpp5/Ok08+me9+97v50Y9+lL333jv3
+3nvv++7t7TOg7rzzzrS1teWee+7JnXfemfvuu6/8Ej8AgP+pY7A3AADwYWiaJo888kiOO+64jB49
+Okny2c9+Npdffvlma9ra2nLjjTfmpz/9aZ588sk88sgjGTFixIC/zm677dZ/T6X9998/r7zySh57
+7LGsXbs255xzTpqmSavVyq677rrZ130/p5xySv7lX/4lf/RHf5Qf/ehHue2227L77rtn9uzZufPO
+O/Pkk09m5cqV2XvvvQe0x6VLl+aJJ57IQw89lCR544038p//+Z+ZMGHCgF8nAMDWEp0AgCGraZp3
+BZ63L1t72+uvv57TTz8906ZNy6RJk/L7v//7ueOOOwb8NXbaaaf+j9va2tI0TTZt2pQJEybkpptu
+SpJs3Lgxr7/++oCPedxxx+X666/P8uXL85GPfCS77757Vq1alS996Us599xzM3Xq1LS3t28xXvX1
+9SVJWq1WvvKVr+T4449Pkrz88svp7Owc8H4AALaFy+sAgCGno6MjrVYrkyZNyk9/+tP++yzdeeed
+mTx5cv+aTZs25amnnkp7e3suuOCCTJ48OQ888MBW3ej7vcLP+PHjs3Llyjz11FNJksWLF+f666/v
+/7pvvfXW+x5z5MiROeqoo7JgwYL++zktX748f/iHf5gZM2bkYx/7WJYsWdK/z7f3MHbs2P57RT32
+2GN58cUXkySTJ0/Od7/73bz11lvp7e3NzJkz8+ijjw74NQIAbAtnOgEAQ85uu+2WPfbYIwsWLMj5
+55+fP/mTP8mmTZtyyCGH5KqrrkqSHHvssTnvvPNy66235sADD8ynPvWp7LLLLpk0aVKee+65JAN7
+V7j3WvM7v/M7WbBgQf7iL/4irVYrv/u7v5tvfOMbSZKjjz468+bNy/XXX58/+IM/+I3HnTZtWu69
+996ccMIJSZITTzwxF198caZNm5aOjo4ceOCB+eUvf7nZHk466aT8+Mc/zsknn5xDDjkkBx10UJLk
+jDPOyH//939n+vTp2bRpU0477bRMmjRpoH+dAADbpK0ZjPcKBgAAAGBIc6YTAMD7eOaZZ3LxxRdv
+dkbT2zcgv/baa3PIIYds03G//vWvZ+nSpe86U+rQQw/NNddc84H2DACwPXCmEwAAAADl3EgcAAAA
+gHKiEwAAAADlRCcAAAAAyolOAAAAAJT7f3XJmb8sntaVAAAAAElFTkSuQmCC
+"
+>
 </div>
 
 </div>
@@ -11983,6 +12166,65 @@ Name: total_net_value, dtype: float64</pre>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.99</span><span class="p">)</span>
+<span class="n">bottom_99</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>244.0</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bottom_99</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(188854, 264)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;total_net_value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">bottom_99</span><span class="p">,</span> <span class="s1">&#39;total_net_value&#39;</span><span class="p">],</span>
@@ -11998,11 +12240,11 @@ Name: total_net_value, dtype: float64</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x112e72ef0&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x113d91f98&gt;</pre>
 </div>
 
 </div>
@@ -12233,7 +12475,7 @@ IiIiIiIikrO/ANFcWOIrvWE6AAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99_dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;total_net_value &gt; </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bottom_99</span><span class="p">))</span>
@@ -12254,11 +12496,11 @@ IiIiIiIikrO/ANFcWOIrvWE6AAAAAElFTkSuQmCC
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[10]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x113740b70&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x11366e208&gt;</pre>
 </div>
 
 </div>
@@ -12667,68 +12909,10 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99_dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;state_company == &quot;CE&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[11]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(13, 264)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;state_company == &quot;CE&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(1433, 264)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99_dataset</span><span class="p">[</span><span class="s1">&#39;state_company&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99_dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;state_company == &quot;CE&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
 
 </div>
@@ -12743,7 +12927,7 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>216</pre>
+<pre>(13, 264)</pre>
 </div>
 
 </div>
@@ -12755,6 +12939,64 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;state_company == &quot;CE&quot;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(1433, 264)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99_dataset</span><span class="p">[</span><span class="s1">&#39;state_company&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>216</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99_dataset</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;state_company == &quot;CE&quot;&#39;</span><span class="p">)</span> \
@@ -12769,7 +13011,7 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[14]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -13136,7 +13378,7 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">yelp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-11-29-yelp-companies.xz&#39;</span><span class="p">,</span>
@@ -13152,7 +13394,7 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[15]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -13328,68 +13570,10 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">yelp</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[16]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>1563</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">companies</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[17]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>(18013, 228)</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
 <div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">yelp</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">yelp</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -13404,7 +13588,7 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>10651</pre>
+<pre>1563</pre>
 </div>
 
 </div>
@@ -13416,6 +13600,64 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">companies</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[19]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(18013, 228)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">yelp</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>10651</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">yelp</span><span class="p">[</span><span class="s1">&#39;price.int&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">yelp</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">len</span><span class="p">()</span>
@@ -13431,7 +13673,7 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">yelp_just_significant_states</span> <span class="o">=</span> \
@@ -13448,7 +13690,7 @@ IiIiIiIiIvLI/wdDbd6gjn5fmwAAAABJRU5ErkJggg==
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[20]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[22]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13480,13 +13722,33 @@ Name: location.state, dtype: int64</pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Yelp won't be that useful for now, since we don't have a lot of data. Will leave it for another analysis.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Predict-prices">Predict prices<a class="anchor-link" href="#Predict-prices">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The idea here is to try to predict the "right range for prices" in a specific place. If we can have a good accuracy, everything far from the prediction could be considered an outlier.</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">bottom_99_dataset</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:</span><span class="mi">57</span><span class="p">]</span>
@@ -13500,7 +13762,7 @@ Name: location.state, dtype: int64</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[21]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[23]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13582,7 +13844,7 @@ Name: 7876, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.dummy</span> <span class="k">import</span> <span class="n">DummyRegressor</span>
@@ -13605,7 +13867,7 @@ Name: 7876, dtype: object</pre>
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[22]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[24]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13620,7 +13882,7 @@ Name: 7876, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">LabelEncoder</span>
@@ -13669,9 +13931,20 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>LinearRegression</strong></p>
+<p>Not very good accuracy.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LinearRegression</span>
@@ -13689,7 +13962,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[24]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[26]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13702,9 +13975,19 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>What if we could improve it using the type of business as a feature? e.g. restaurant, hotel, grill...</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">unicodedata</span>
@@ -13722,7 +14005,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">nltk</span>
@@ -13743,7 +14026,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">frequent_words</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">count_vect</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">(),</span>
@@ -13757,7 +14040,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">frequent_words</span><span class="p">[:</span><span class="mi">20</span><span class="p">]</span>
@@ -13771,7 +14054,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[28]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[30]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -13805,12 +14088,12 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">frequent_words</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">frequent_words</span><span class="p">)</span>
 
-<span class="n">excluded_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ltda&#39;</span><span class="p">,</span> <span class="s1">&#39;cia&#39;</span><span class="p">]</span>
+<span class="n">excluded_keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ltda&#39;</span><span class="p">,</span> <span class="s1">&#39;cia&#39;</span><span class="p">,</span> <span class="s1">&#39;epp&#39;</span><span class="p">]</span>
 <span class="p">[</span><span class="n">frequent_words</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span> <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">excluded_keywords</span><span class="p">]</span>
 </pre></div>
 
@@ -13822,11 +14105,11 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[29]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[31]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>[22097, 837]</pre>
+<pre>[22097, 837, 1830]</pre>
 </div>
 
 </div>
@@ -13837,7 +14120,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">business_type</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -13879,7 +14162,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[33]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">le_state</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
@@ -13935,7 +14218,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
@@ -13951,11 +14234,11 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[32]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[34]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>0.092392002550978458</pre>
+<pre>0.092169563054930737</pre>
 </div>
 
 </div>
@@ -13969,6 +14252,16 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Still not good enough. In fact, there's a serious mistake when considering this linear regression method for outlier detection: not just we're assuming that prices follow a linear regression (IMHO still good assumption, though), but outliers should be removed before running the regression. In other words, to find outliers, we must first remove them, having the regression score as just a accuracy estimator. May still be an interesting approach but we want to engage with something simpler first, to get the easier and most anomalous results.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Common-CNPJs">Common CNPJs<a class="anchor-link" href="#Common-CNPJs">&#182;</a></h2><p>Expenses in the same restaurant are expected to follow a normal distribution. Can we find outliers in companies with enough expenses to analyze?</p>
 
 </div>
@@ -13976,7 +14269,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">normaltest</span>
@@ -14008,7 +14301,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[33]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[35]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -14089,7 +14382,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">net_values_by_cnpj</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;normaltest_pvalue &lt; .05&#39;</span><span class="p">))</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">net_values_by_cnpj</span><span class="p">)</span>
@@ -14103,7 +14396,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[34]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[36]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -14118,7 +14411,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_with_threshold</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">net_values_by_cnpj</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;cnpj_cpf&#39;</span><span class="p">)</span> \
@@ -14132,7 +14425,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[38]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_with_threshold</span><span class="p">[</span><span class="s1">&#39;main_activity&#39;</span><span class="p">]</span> <span class="o">=</span> \
@@ -14144,9 +14437,20 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's discard hotel reibursements. There's no method yet to discover for how long the congressperson stayed in the hotel, so we can expect a high standard deviation in their expenses. Even when detecting outliers, it's too hard to investigate manually given the same reason.</p>
+<p>Here, we just consider CNPJs where we have more than 20 reimbursements, from at least 3 congresspeople.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[39]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">is_hotel_reimbursement</span> <span class="o">=</span> <span class="n">data_with_threshold</span><span class="p">[</span><span class="s1">&#39;main_activity&#39;</span><span class="p">]</span> \
@@ -14180,13 +14484,14 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Foursquare">Foursquare<a class="anchor-link" href="#Foursquare">&#182;</a></h2>
+<h2 id="Foursquare">Foursquare<a class="anchor-link" href="#Foursquare">&#182;</a></h2><p>Before totally discarding it, let's see how significant is the Foursquare dataset.</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[40]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">foursquare</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../data/2016-12-02-foursquare-companies.xz&#39;</span><span class="p">,</span>
@@ -14202,7 +14507,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[45]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[40]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -14368,7 +14673,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[41]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">foursquare</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -14382,7 +14687,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area"><div class="prompt output_prompt">Out[48]:</div>
+<div class="output_area"><div class="prompt output_prompt">Out[41]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -14458,7 +14763,7 @@ Name: 0, dtype: object</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[57]:</div>
+<div class="prompt input_prompt">In&nbsp;[42]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">foursquare</span><span class="p">[</span><span class="s1">&#39;price.tier&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>

@@ -19,6 +19,16 @@ plt.rcParams['figure.figsize'] = (20, 10)
 
 # In[2]:
 
+from serenata_toolbox.datasets import fetch
+
+fetch('2016-11-19-reimbursements.xz', '../data')
+fetch('2016-09-03-companies.xz', '../data')
+fetch('2016-11-29-yelp-companies.xz', '../data')
+fetch('2016-12-02-foursquare-companies.xz', '../data')
+
+
+# In[3]:
+
 import numpy as np
 import pandas as pd
 
@@ -37,7 +47,9 @@ dataset['issue_date_weekday'] = dataset['issue_date'].apply(lambda date: date.we
 dataset['issue_date_week'] = dataset['issue_date'].apply(lambda date: date.week)
 
 
-# In[3]:
+# The `companies.xz` dataset has businesses placed outside Brazilian area. We intentionally disconsider them.
+
+# In[4]:
 
 is_in_brazil = '(-73.992222 < longitude < -34.7916667) & (-33.742222 < latitude < 5.2722222)'
 companies = pd.read_csv('../data/2016-09-03-companies.xz',
@@ -52,42 +64,49 @@ dataset = pd.merge(dataset, companies,
                    suffixes=('', '_company'))
 
 
-# In[4]:
+# In[5]:
 
 dataset =     dataset.query('subquota_description == "Congressperson meal"')
 companies =     companies[companies['cnpj'].isin(dataset.loc[dataset['cnpj'].notnull(),
                                                  'cnpj'])]
 
 
-# In[5]:
+# In[6]:
 
 dataset['total_net_value'].describe()
 
 
-# In[6]:
+# In[7]:
 
 dataset['total_net_value'].median()
 
 
-# In[7]:
+# In[8]:
+
+sns.distplot(dataset['total_net_value'],
+             bins=30,
+             kde=False)
+
+
+# In[9]:
 
 bottom_99 = dataset['total_net_value'].quantile(0.99)
 bottom_99
 
 
-# In[8]:
+# In[10]:
 
 dataset[dataset['total_net_value'] < bottom_99].shape
 
 
-# In[9]:
+# In[11]:
 
 sns.distplot(dataset.loc[dataset['total_net_value'] < bottom_99, 'total_net_value'],
              bins=30,
              kde=False)
 
 
-# In[10]:
+# In[12]:
 
 bottom_99_dataset = dataset.query('total_net_value > {}'.format(bottom_99))
 ranking = bottom_99_dataset.groupby('state_company')['total_net_value']     .median().sort_values(ascending=False)
@@ -98,29 +117,29 @@ sns.boxplot(x='state_company',
             order=ranking.index)
 
 
-# In[11]:
+# In[13]:
 
 bottom_99_dataset.query('state_company == "CE"').shape
 
 
-# In[12]:
+# In[14]:
 
 dataset.query('state_company == "CE"').shape
 
 
-# In[13]:
+# In[15]:
 
 bottom_99_dataset['state_company'].isnull().sum()
 
 
-# In[14]:
+# In[16]:
 
 bottom_99_dataset.query('state_company == "CE"')     .sort_values('total_net_value', ascending=False)
 
 
 # ## Using Yelp to improve prices information
 
-# In[15]:
+# In[17]:
 
 yelp = pd.read_csv('../data/2016-11-29-yelp-companies.xz',
                    low_memory=False)
@@ -129,45 +148,49 @@ yelp.head()
 
 # We have data for just 8.6% of the companies which received from the "Congressperson meal" subquota.
 
-# In[16]:
+# In[18]:
 
 yelp['price'].notnull().sum()
 
 
-# In[17]:
+# In[19]:
 
 companies.shape
 
 
-# In[18]:
+# In[20]:
 
 yelp['price'].isnull().sum()
 
 
-# In[19]:
+# In[21]:
 
 yelp['price.int'] = yelp['price'].str.len()
 states_with_records =     yelp[yelp['price'].notnull()].groupby('location.state')['location.state'].count() > 10
 states_with_records = states_with_records[states_with_records].index
 
 
-# In[20]:
+# In[22]:
 
 yelp_just_significant_states =     yelp[yelp['price'].notnull() &
          yelp['location.state'].isin(states_with_records)]
 yelp_just_significant_states['location.state'].value_counts()
 
 
+# Yelp won't be that useful for now, since we don't have a lot of data. Will leave it for another analysis.
+
 # ## Predict prices
 
-# In[21]:
+# The idea here is to try to predict the "right range for prices" in a specific place. If we can have a good accuracy, everything far from the prediction could be considered an outlier.
+
+# In[23]:
 
 bottom_99_dataset.iloc[0, :57]
 
 
 # **DummyRegressor with mean strategy as a baseline**
 
-# In[22]:
+# In[24]:
 
 from sklearn.dummy import DummyRegressor
 from sklearn.model_selection import train_test_split
@@ -181,7 +204,7 @@ model.fit(X_train, y_train)
 model.score(X_test, y_test)
 
 
-# In[23]:
+# In[25]:
 
 from sklearn.preprocessing import LabelEncoder
 
@@ -201,7 +224,11 @@ y = model_dataset['total_net_value']
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
 
-# In[24]:
+# **LinearRegression**
+# 
+# Not very good accuracy.
+
+# In[26]:
 
 from sklearn.linear_model import LinearRegression
 
@@ -210,7 +237,9 @@ model.fit(X_train, y_train)
 model.score(X_test, y_test)
 
 
-# In[25]:
+# What if we could improve it using the type of business as a feature? e.g. restaurant, hotel, grill...
+
+# In[27]:
 
 import unicodedata
 
@@ -220,7 +249,7 @@ def normalize_string(string):
         return nfkd_form.encode('ASCII', 'ignore').decode('utf-8')
 
 
-# In[26]:
+# In[28]:
 
 import nltk
 from sklearn.feature_extraction.text import CountVectorizer
@@ -233,26 +262,26 @@ trade_names = np.vectorize(normalize_string)(trade_names)
 dataset_counts = count_vect.fit_transform(trade_names)
 
 
-# In[27]:
+# In[29]:
 
 frequent_words = sorted(list(zip(count_vect.get_feature_names(),
     np.asarray(dataset_counts.sum(axis=0)).ravel())), key=lambda x: -x[1])
 
 
-# In[28]:
+# In[30]:
 
 frequent_words[:20]
 
 
-# In[29]:
+# In[31]:
 
 frequent_words = dict(frequent_words)
 
-excluded_keywords = ['ltda', 'cia']
+excluded_keywords = ['ltda', 'cia', 'epp']
 [frequent_words.pop(keyword) for keyword in excluded_keywords]
 
 
-# In[30]:
+# In[32]:
 
 def business_type(name):
     fun = np.vectorize(lambda x: normalize_string(x))
@@ -267,7 +296,7 @@ dataset['supplier_keyword'] = dataset['supplier'].apply(business_type)
 bottom_99_dataset['supplier_keyword'] =     bottom_99_dataset['supplier'].apply(business_type)
 
 
-# In[31]:
+# In[33]:
 
 le_state = LabelEncoder()
 le_city = LabelEncoder()
@@ -287,18 +316,20 @@ y = model_dataset['total_net_value']
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
 
-# In[32]:
+# In[34]:
 
 model = LinearRegression(n_jobs=-1)
 model.fit(X_train, y_train)
 model.score(X_test, y_test)
 
 
+# Still not good enough. In fact, there's a serious mistake when considering this linear regression method for outlier detection: not just we're assuming that prices follow a linear regression (IMHO still good assumption, though), but outliers should be removed before running the regression. In other words, to find outliers, we must first remove them, having the regression score as just a accuracy estimator. May still be an interesting approach but we want to engage with something simpler first, to get the easier and most anomalous results.
+
 # ## Common CNPJs
 # 
 # Expenses in the same restaurant are expected to follow a normal distribution. Can we find outliers in companies with enough expenses to analyze?
 
-# In[33]:
+# In[35]:
 
 from scipy.stats import normaltest
 
@@ -315,22 +346,26 @@ net_values_by_cnpj = pd.merge(net_values_by_cnpj, applicants_per_cnpj)
 net_values_by_cnpj.head()
 
 
-# In[34]:
+# In[36]:
 
 len(net_values_by_cnpj.query('normaltest_pvalue < .05')) / len(net_values_by_cnpj)
 
 
-# In[35]:
+# In[37]:
 
 data_with_threshold = pd.merge(dataset, net_values_by_cnpj, on='cnpj_cpf')     .sort_values('total_net_value', ascending=False)
 
 
-# In[36]:
+# In[38]:
 
 data_with_threshold['main_activity'] =     data_with_threshold['main_activity'].apply(normalize_string)
 
 
-# In[37]:
+# Let's discard hotel reibursements. There's no method yet to discover for how long the congressperson stayed in the hotel, so we can expect a high standard deviation in their expenses. Even when detecting outliers, it's too hard to investigate manually given the same reason.
+# 
+# Here, we just consider CNPJs where we have more than 20 reimbursements, from at least 3 congresspeople.
+
+# In[39]:
 
 is_hotel_reimbursement = data_with_threshold['main_activity']     .str.contains('hoteis').astype(np.bool)
 outliers = data_with_threshold[~is_hotel_reimbursement]     .query('(congresspeople > 3) & (len >= 20) & (total_net_value > threshold)')
@@ -338,20 +373,22 @@ print(len(outliers), outliers['total_net_value'].sum())
 
 
 # ## Foursquare
+# 
+# Before totally discarding it, let's see how significant is the Foursquare dataset.
 
-# In[45]:
+# In[40]:
 
 foursquare = pd.read_csv('../data/2016-12-02-foursquare-companies.xz',
                          low_memory=False)
 foursquare.head()
 
 
-# In[48]:
+# In[41]:
 
 foursquare.iloc[0]
 
 
-# In[57]:
+# In[42]:
 
 print(foursquare['price.tier'].notnull().sum(),
       foursquare['price.tier'].notnull().sum() / len(companies),
