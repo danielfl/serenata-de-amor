@@ -402,53 +402,219 @@ print(foursquare['price.tier'].notnull().sum(),
 companies.shape
 
 
+# In[44]:
+
+# is_cnpj = (dataset['cnpj_cpf'].str.len() == 14) & \
+#     dataset['cnpj_cpf'].notnull() & \
+#     dataset['document_type'] != 2
+# cnpjs = dataset.sort_values('issue_date') \
+#     .loc[is_cnpj, ['cnpj_cpf', 'supplier']] \
+#     .drop_duplicates('cnpj_cpf', keep='last')
+# cnpjs.head()
+
+
 # In[45]:
 
-cnpjs = dataset.sort_values('issue_date')     .loc[dataset['cnpj_cpf'].str.len() == 14,
-         ['cnpj_cpf', 'supplier']] \
-    .drop_duplicates('cnpj_cpf', keep='last')
-cnpjs.head()
+is_cnpj = dataset['cnpj_cpf'].str.len() == 14
+cnpj_list = dataset.loc[is_cnpj].groupby('cnpj')['total_net_value']     .agg([np.mean, np.std]).reset_index()
+cnpj_list.shape
 
 
 # In[46]:
 
-dataset.loc[dataset['cnpj_cpf'].str.len() == 14].groupby('cnpj')
+cnpj_list.head()
 
 
 # In[47]:
 
-is_cnpj = (dataset['cnpj_cpf'].str.len() != 14) &     dataset['cnpj_cpf'].notnull() &     dataset['document_type'] != 2
-dataset.loc[is_cnpj]     .sort_values('total_net_value', ascending=False).iloc[1]
+cnpj_list = pd.merge(cnpj_list,
+                     dataset[['cnpj_cpf', 'supplier']].drop_duplicates('cnpj_cpf'),
+                     how='left',
+                     left_on='cnpj', right_on='cnpj_cpf')
+del cnpj_list['cnpj_cpf']
+cnpj_list.head()
 
 
 # In[48]:
 
-dataset['cnpj_cpf'] = dataset['cnpj_cpf'].astype(np.str).replace('nan', None)
+counts = dataset.loc[is_cnpj].groupby('cnpj')['applicant_id']     .agg({'congresspeople': (lambda x: len(np.unique(x))),
+          'len': (lambda x: len(x))
+         }).reset_index()
 
+cnpj_list = pd.merge(cnpj_list, counts)
+
+
+# **Calculate threshold for companies using their own receipts**
 
 # In[49]:
 
-cnpj_cpf_list = dataset[['cnpj_cpf']].drop_duplicates()
-cnpj_cpf_list['cnpj_cpf'] = cnpj_cpf_list['cnpj_cpf'].astype(np.str)     .replace('nan', None)
+threshold_for_cnpjs = cnpj_list.groupby('cnpj')     .apply(lambda x: x['mean'].mean() + 3 * x['std'].mean()).reset_index()     .rename(columns={0: 'threshold'})
+threshold_for_cnpjs
+
+cnpj_list = pd.merge(cnpj_list, threshold_for_cnpjs)
+cnpj_list.head()
 
 
 # In[50]:
 
-from math import isnan
-from pycpfcnpj import cpfcnpj
-
-def validate_cnpj_cpf(cnpj_or_cpf):
-    (cnpj_or_cpf == None) | cpfcnpj.validate(cnpj_or_cpf)
+HOTEL_REGEX = r'hote[l(eis)(ls)]'
+is_hotel_reimbursement = (cnpj_list['supplier'].str.lower().str.contains(HOTEL_REGEX))
 
 
-
-cnpj_cpf_list['valid_cnpj_cpf'] =     np.vectorize(cpfcnpj.validate)(cnpj_cpf_list['cnpj_cpf'])
-
+# Mark companies as having or not significant data.
 
 # In[51]:
 
-cnpj_cpf_list[~cnpj_cpf_list['valid_cnpj_cpf']]
+rows = (~is_hotel_reimbursement) &     (cnpj_list['congresspeople'] > 3) &     (cnpj_list['len'] > 20)
+cnpj_list['has_significant_data'] = False
+cnpj_list.loc[rows, 'has_significant_data'] = True
 
+
+# In[52]:
+
+print(cnpj_list['has_significant_data'].sum(),
+      cnpj_list['has_significant_data'].sum() / len(cnpj_list['has_significant_data']))
+
+
+# In[53]:
+
+sns.lmplot('mean', 'std',
+           data=cnpj_list.query('has_significant_data'),
+           scatter_kws={'marker': 'D', 's': 100},
+           size=10)
+
+
+# **Predict threshold classifying companies in clusters by their price ranges**
+
+# In[54]:
+
+X = cnpj_list.loc[cnpj_list['has_significant_data'],
+                  ['mean', 'std']]
+
+
+# In[55]:
+
+from sklearn.cluster import KMeans
+
+model = KMeans(n_clusters=3, random_state=0)
+model.fit(X)
+
+
+# In[56]:
+
+cnpj_list.loc[cnpj_list['has_significant_data'], 'y'] = model.predict(X)
+
+
+# In[57]:
+
+cnpj_list.query('y.notnull()').head()
+
+
+# In[58]:
+
+rows = (~cnpj_list['has_significant_data']) &     cnpj_list['std'].notnull() &     (~is_hotel_reimbursement)
+X = cnpj_list.loc[rows, ['mean', 'std']]
+cnpj_list.loc[rows, 'y'] = model.predict(X)
+
+
+# In[59]:
+
+threshold_for_groups = cnpj_list.groupby('y')     .apply(lambda x: x['mean'].mean() + 4 * x['std'].mean()).reset_index()     .rename(columns={0: 'threshold'})
+threshold_for_groups
+
+
+# In[60]:
+
+group_thresholds = pd.merge(cnpj_list.query('~has_significant_data'),
+                            threshold_for_groups,
+                            on='y',
+                            suffixes=('', '_group'))
+
+cnpj_list = pd.merge(cnpj_list,
+                     group_thresholds[['cnpj', 'threshold_group']],
+                     how='left')
+cnpj_list.loc[~cnpj_list['has_significant_data'], 'threshold'] =     cnpj_list['threshold_group']
+
+
+# In[61]:
+
+cnpj_list.query('(~has_significant_data) & std.notnull()').head()
+
+
+# In[62]:
+
+cnpj_list.query('has_significant_data').head()
+
+
+# In[63]:
+
+cnpj_list.query('threshold.notnull()').sample(5, random_state=10)
+
+
+# In[64]:
+
+del cnpj_list['threshold_group']
+
+
+# In[65]:
+
+merged = pd.merge(dataset, cnpj_list,
+                  how='left',
+                  left_on='cnpj_cpf',
+                  right_on='cnpj',
+                  suffixes=('', '_company'))
+
+
+# In[66]:
+
+merged['supplier'] = merged['supplier'].astype(np.str)
+is_hotel_reimbursement =     (merged['supplier'].str.lower().str.contains(HOTEL_REGEX))
+
+merged[~is_hotel_reimbursement].query('total_net_value > threshold').shape
+
+
+# In[67]:
+
+keys = ['year',
+        'congressperson_name',
+        'document_id',
+        'total_net_value',
+        'threshold',
+        'cnpj_cpf',
+        'has_significant_data',
+        'name']
+
+merged['diff'] = merged['threshold'] - merged['total_net_value']
+merged[~(is_hotel_reimbursement | merged['has_significant_data'])]     .query('(total_net_value > threshold)')     .sort_values('diff', ascending=False).head(10)[keys]
+
+
+# In[68]:
+
+merged[~is_hotel_reimbursement].shape
+
+
+# In[69]:
+
+merged[~is_hotel_reimbursement]     .query('(total_net_value > threshold)')['total_net_value'].shape
+
+
+# In[70]:
+
+merged[~is_hotel_reimbursement]     .query('(total_net_value > threshold)')['total_net_value'].sum()
+
+
+# In[71]:
+
+merged[~is_hotel_reimbursement]     .query('(total_net_value > threshold) & (has_significant_data == False)')['total_net_value'].shape
+
+
+# ## Conclusions
+# 
+# For companies with significant data (defined by us as a company which received money at least 20x, from at least 3 distinct congresspeople), we use mean + 3 * std to detect outliers. Does not return all the suspect cases, but all of them, after some sampling investigation, seem to be very suspect.
+# 
+# Since there's "significant data" just for 4% of the companies, we need a way for extrapolating the results for not so known ones. For doing so, we classify companies in 3 clusters using K-Means, considering mean and standard deviation of their prices as features. Once classified, we consider their threshold mean + 4 * stds of their clusters (one extra std compared to places where we have enough reimbursements to know better).
+# 
+# Reimbursements made for expenses in hotels are discarded from this classifier, since they usually contain much more than meals (and we don't know for how long the congressperson was hosted in the place, not yet trustable for legal reports).
 
 # In[ ]:
 
